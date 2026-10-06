@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Orders - ShopEase</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .orders-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .orders-container h1 {
+            margin-bottom: 25px;
+        }
+
+        .order-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            font-weight: 700;
+            color: #333;
+        }
+
+        .order-date {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .status {
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .order-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: #f8f8f8;
+            border-radius: 10px;
+        }
+
+        .order-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-info h3 {
+            margin: 0 0 6px;
+            font-size: 17px;
+        }
+
+        .item-info p {
+            margin: 4px 0;
+            color: #666;
+        }
+
+        .order-footer {
+            border-top: 1px solid #eee;
+            margin-top: 18px;
+            padding-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .payment {
+            color: #555;
+        }
+
+        .cancel-btn {
+            border: none;
+            background: #e53935;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .cancel-btn:hover {
+            background: #c62828;
+        }
+
+        .cancel-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading,
+        .empty-orders,
+        .error-message {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-orders h2 {
+            margin-bottom: 10px;
+        }
+
+        .shop-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 22px;
+            background: #111827;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 600px) {
+
+            .orders-container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            .order-item {
+                align-items: flex-start;
+            }
+
+            .order-item img {
+                width: 65px;
+                height: 65px;
+            }
+
+            .item-info h3 {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="logo">
+            <a href="index.html">ShopEase</a>
+        </div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="search.html">Search</a>
+            <a href="wishlist.html">Wishlist</a>
+            <a href="cart.html">Cart</a>
+            <a href="orders.html">My Orders</a>
+            <a href="login.html">Login</a>
+        </nav>
+
+    </header>
+
+
+    <!-- ORDERS -->
+
+    <main class="orders-container">
+
+        <h1>📦 My Orders</h1>
+
+        <div id="loading" class="loading">
+            Loading your orders...
+        </div>
+
+        <div id="orders-container"></div>
+
+        <div id="error-message" class="error-message"></div>
+
+    </main>
+
+
+    <script>
+
+        // ==========================================
+        // API
+        // ==========================================
+
+        const API_URL =
+            "http://localhost:5000/api/orders";
+
+
+        // ==========================================
+        // ELEMENTS
+        // ==========================================
+
+        const loading =
+            document.getElementById("loading");
+
+        const ordersContainer =
+            document.getElementById(
+                "orders-container"
+            );
+
+        const errorMessage =
+            document.getElementById(
+                "error-message"
+            );
+
+
+        // ==========================================
+        // LOAD ORDERS
+        // ==========================================
+
+        async function loadOrders() {
+
+            const token =
+                localStorage.getItem("token");
+
+
+            // CHECK LOGIN
+
+            if (!token) {
+
+                loading.style.display = "none";
+
+                errorMessage.innerHTML = `
+                    <h2>Please Login First</h2>
+                    <p>You need to login to see your orders.</p>
+
+                    <a
+                        href="login.html"
+                        class="shop-btn"
+                    >
+                        Login
+                    </a>
+                `;
+
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        API_URL,
+                        {
+                            method: "GET",
+
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    if (
+                        response.status === 401
+                    ) {
+
+                        localStorage.removeItem(
+                            "token"
+                        );
+
+                        localStorage.removeItem(
+                            "user"
+                        );
+
+                        alert(
+                            "Your login session has expired. Please login again."
+                        );
+
+                        window.location.href =
+                            "login.html";
+
+                        return;
+                    }
+
+                    throw new Error(
+                        data.message ||
+                        "Unable to load orders"
+                    );
+                }
+
+
+                loading.style.display =
+                    "none";
+
+
+                // ==================================
+                // GET ORDERS
+                // ==================================
+
+                const orders =
+                    data.orders ||
+                    data.data ||
+                    [];
+
+
+                if (!orders.length) {
+
+                    ordersContainer.innerHTML = `
+
+                        <div class="empty-orders">
+
+                            <h2>
+                                📦 No Orders Yet
+                            </h2>
+
+                            <p>
+                                You haven't placed any orders yet.
+                            </p>
+
+                            <a
+                                href="products.html"
+                                class="shop-btn"
+                            >
+                                Start Shopping
+                            </a>
+
+                        </div>
+
+                    `;
+
+                    return;
+                }
+
+
+                // ==================================
+                // DISPLAY ORDERS
+                // ==================================
+
+                ordersContainer.innerHTML =
+                    orders
+                        .map(
+                            order =>
+                                createOrderCard(
+                                    order
+                                )
+                        )
+                        .join("");
+
+
+            } catch (error) {
+
+                console.error(
+                    "Orders Error:",
+                    error
+                );
+
+                loading.style.display =
+                    "none";
+
+                errorMessage.innerHTML = `
+
+                    <h2>
+                        Unable to Load Orders
+                    </h2>
+
+                    <p>
+                        ${error.message}
+                    </p>
+
+                `;
+            }
+        }
+
+
+        // ==========================================
+        // CREATE ORDER CARD
+        // ==========================================
+
+        function createOrderCard(order) {
+
+            const orderId =
+                order._id ||
+                order.id ||
+                "N/A";
+
+
+            const orderDate =
+                order.createdAt
+                    ? new Date(
+                        order.createdAt
+                    ).toLocaleString(
+                        "en-IN"
+                    )
+                    : "N/A";
+
+
+            const status =
+                order.status ||
+                order.orderStatus ||
+                "Processing";
+
+
+            const paymentMethod =
+                order.paymentMethod ||
+                "N/A";
+
+
+            const total =
+                order.totalAmount ??
+                order.total ??
+                order.grandTotal ??
+                0;
+
+
+            const items =
+                order.items ||
+                order.orderItems ||
+                [];
+
+
+            const itemsHTML =
+                items
+                    .map(
+                        item =>
+                            createOrderItem(
+                                item
+                            )
+                    )
+                    .join("");
+
+
+            return `
+
+                <div
+                    class="order-card"
+                >
+
+                    <div
+                        class="order-header"
+                    >
+
+                        <div>
+
+                            <div class="order-id">
+                                Order ID:
+                                ${orderId}
+                            </div>
+
+                            <div class="order-date">
+                                ${orderDate}
+                            </div>
+
+                        </div>
+
+                        <span
+                            class="status"
+                        >
+                            ${status}
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="order-items"
+                    >
+
+                        ${itemsHTML}
+
+                    </div>
+
+
+                    <div
+                        class="order-footer"
+                    >
+
+                        <div>
+
+                            <div class="total">
+                                Total:
+                                ₹${Number(
+                                    total
+                                ).toLocaleString(
+                                    "en-IN"
+                                )}
+                            </div>
+
+                            <div class="payment">
+                                Payment:
+                                ${paymentMethod}
+                            </div>
+
+                        </div>
+
+
+                        ${
+                            status.toLowerCase() !==
+                            "cancelled"
+                                ? `
+                                    <button
+                                        class="cancel-btn"
+                                        onclick="cancelOrder('${orderId}')"
+                                    >
+                                        Cancel Order
+                                    </button>
+                                  `
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+            `;
+        }
+
+
+        // ==========================================
+        // CREATE ORDER ITEM
+        // ==========================================
+
+        function createOrderItem(item) {
+
+            const product =
+                item.product ||
+                item;
+
+
+            const productName =
+                product.name ||
+                item.name ||
+                "Product";
+
+
+            const image =
+                product.image ||
+                item.image ||
+                "image/laptop.jpg";
+
+
+            const price =
+                item.price ??
+                product.price ??
+                0;
+
+
+            const quantity =
+                item.quantity ||
+                1;
+
+
+            let imagePath =
+                image;
+
+
+            if (
+                !imagePath.startsWith(
+                    "http://"
+                ) &&
+                !imagePath.startsWith(
+                    "https://"
+                )
+            ) {
+
+                imagePath =
+                    imagePath.replace(
+                        /^\/+/,
+                        ""
+                    );
+            }
+
+
+            return `
+
+                <div
+                    class="order-item"
+                >
+
+                    <img
+                        src="${imagePath}"
+                        alt="${productName}"
+                        onerror="this.onerror=null; this.src='image/laptop.jpg';"
+                    >
+
+
+                    <div
+                        class="item-info"
+                    >
+
+                        <h3>
+                            ${productName}
+                        </h3>
+
+                        <p>
+                            Price:
+                            ₹${Number(
+                                price
+                            ).toLocaleString(
+                                "en-IN"
+                            )}
+                        </p>
+
+                        <p>
+                            Quantity:
+                            ${quantity}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+        }
+
+
+        // ==========================================
+        // CANCEL ORDER
+        // ==========================================
+
+        async function cancelOrder(orderId) {
+
+            const confirmCancel =
+                confirm(
+                    "Are you sure you want to cancel this order?"
+                );
+
+
+            if (!confirmCancel) {
+                return;
+            }
+
+
+            const token =
+                localStorage.getItem("token");
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/${orderId}/cancel`,
+                        {
+                            method: "PUT",
+
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Unable to cancel order"
+                    );
+                }
+
+
+                alert(
+                    "Order cancelled successfully."
+                );
+
+
+                loadOrders();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Cancel Order Error:",
+                    error
+                );
+
+                alert(
+                    error.message
+                );
+            }
+        }
+
+
+        // ==========================================
+        // START
+        // ==========================================
+
+        loadOrders();
+
+    </script>
+
+</body>
+
+</html>

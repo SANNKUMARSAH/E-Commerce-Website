@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Wishlist - ShopEase</title>
+
+    <!-- Main Website CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Wishlist CSS -->
+    <link rel="stylesheet" href="wishlist.css">
+
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="main-header">
+
+    <!-- LOGO -->
+
+    <div class="logo">
+        <a href="index.html">
+            ShopEase
+        </a>
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="main-nav">
+
+        <ul>
+
+            <li>
+                <a href="index.html">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="products.html">
+                    Products
+                </a>
+            </li>
+
+            <li>
+                <a href="categories.html">
+                    Categories
+                </a>
+            </li>
+
+            <li>
+                <a href="about.html">
+                    About
+                </a>
+            </li>
+
+            <li>
+                <a href="contact.html">
+                    Contact
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- HEADER ACTIONS -->
+
+    <div class="header-actions">
+
+        <a href="search.html">
+            🔍 Search
+        </a>
+
+        <a href="login.html">
+            Login
+        </a>
+
+        <a href="signup.html">
+            Sign Up
+        </a>
+
+        <a href="wishlist.html" class="active">
+            ❤️ Wishlist
+        </a>
+
+        <a href="cart.html">
+            🛒 Cart
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ================= WISHLIST PAGE ================= -->
+
+<main class="wishlist-page">
+
+
+    <!-- PAGE TITLE -->
+
+    <section class="wishlist-header">
+
+        <h1>❤️ My Wishlist</h1>
+
+        <p>
+            Save your favorite products for later.
+        </p>
+
+    </section>
+
+
+    <!-- WISHLIST CONTENT -->
+
+    <section id="wishlistContent">
+
+        <div class="wishlist-loading">
+            Loading wishlist...
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div class="footer-content">
+
+
+        <!-- ABOUT -->
+
+        <div class="footer-section">
+
+            <h3>ShopEase</h3>
+
+            <p>
+                Your one-stop destination
+                for online shopping.
+            </p>
+
+        </div>
+
+
+        <!-- QUICK LINKS -->
+
+        <div class="footer-section">
+
+            <h3>Quick Links</h3>
+
+            <ul>
+
+                <li>
+                    <a href="index.html">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="products.html">
+                        Products
+                    </a>
+                </li>
+
+                <li>
+                    <a href="categories.html">
+                        Categories
+                    </a>
+                </li>
+
+                <li>
+                    <a href="about.html">
+                        About
+                    </a>
+                </li>
+
+                <li>
+                    <a href="contact.html">
+                        Contact
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- CUSTOMER SERVICE -->
+
+        <div class="footer-section">
+
+            <h3>Customer Service</h3>
+
+            <ul>
+
+                <li>
+                    <a href="#">
+                        FAQ
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        Shipping
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        Returns
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        Privacy Policy
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- SOCIAL -->
+
+        <div class="footer-section">
+
+            <h3>Follow Us</h3>
+
+            <a href="#">Instagram</a>
+            <a href="#">Facebook</a>
+            <a href="#">Twitter</a>
+            <a href="#">YouTube</a>
+
+        </div>
+
+    </div>
+
+
+    <!-- COPYRIGHT -->
+
+    <div class="copyright">
+
+        <p>
+            © 2026 ShopEase. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+const API_URL = "http://localhost:5000";
+
+const token = localStorage.getItem("token");
+
+const wishlistContent =
+    document.getElementById("wishlistContent");
+
+
+// ==================================================
+// LOGIN CHECK
+// ==================================================
+
+if (!token) {
+
+    wishlistContent.innerHTML = `
+
+        <div class="wishlist-message">
+
+            <div class="wishlist-icon">
+                ❤️
+            </div>
+
+            <h2>
+                Please Login
+            </h2>
+
+            <p>
+                Login to see your wishlist.
+            </p>
+
+            <a
+                href="login.html"
+                class="wishlist-primary-btn"
+            >
+                Login
+            </a>
+
+        </div>
+
+    `;
+
+} else {
+
+    loadWishlist();
+
+}
+
+
+// ==================================================
+// GET WISHLIST
+// GET /api/wishlist
+// ==================================================
+
+async function loadWishlist() {
+
+    wishlistContent.innerHTML = `
+
+        <div class="wishlist-loading">
+            Loading wishlist...
+        </div>
+
+    `;
+
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/api/wishlist`,
+            {
+                method: "GET",
+
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+        );
+
+
+        const data = await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Unable to load wishlist"
+            );
+
+        }
+
+
+        // CONSISTENT API CONTRACT
+        const items = data.wishlist.items;
+
+
+        renderWishlist(items);
+
+
+    } catch (error) {
+
+        console.error(
+            "Wishlist Error:",
+            error
+        );
+
+
+        wishlistContent.innerHTML = `
+
+            <div class="wishlist-message">
+
+                <div class="wishlist-icon">
+                    ⚠️
+                </div>
+
+                <h2>
+                    Unable to Load Wishlist
+                </h2>
+
+                <p>
+                    ${escapeHTML(error.message)}
+                </p>
+
+                <button
+                    class="wishlist-primary-btn"
+                    onclick="loadWishlist()"
+                >
+                    Try Again
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// ==================================================
+// RENDER WISHLIST
+// ==================================================
+
+function renderWishlist(items) {
+
+
+    if (!items || items.length === 0) {
+
+        wishlistContent.innerHTML = `
+
+            <div class="wishlist-message">
+
+                <div class="wishlist-icon">
+                    💔
+                </div>
+
+                <h2>
+                    Your Wishlist is Empty
+                </h2>
+
+                <p>
+                    You haven't added any products
+                    to your wishlist yet.
+                </p>
+
+                <a
+                    href="products.html"
+                    class="wishlist-primary-btn"
+                >
+                    Continue Shopping
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    wishlistContent.innerHTML = `
+
+        <div class="wishlist-container">
+
+            ${items.map(item => {
+
+                const product = item.product;
+
+
+                if (!product) {
+                    return "";
+                }
+
+
+                const productId =
+                    product._id;
+
+
+                const productName =
+                    product.name || "Product";
+
+
+                const productImage =
+                    product.image ||
+                    "image/placeholder.jpg";
+
+
+                const productPrice =
+                    Number(product.price || 0);
+
+
+                return `
+
+                    <article
+                        class="wishlist-card"
+                    >
+
+
+                        <!-- IMAGE -->
+
+                        <div
+                            class="wishlist-image"
+                        >
+
+                            <img
+                                src="${productImage}"
+                                alt="${escapeHTML(productName)}"
+
+                                onerror="
+                                    this.onerror=null;
+                                    this.src='image/placeholder.jpg';
+                                "
+                            >
+
+                        </div>
+
+
+                        <!-- PRODUCT INFO -->
+
+                        <div
+                            class="wishlist-info"
+                        >
+
+                            <h3>
+                                ${escapeHTML(productName)}
+                            </h3>
+
+
+                            <p class="wishlist-price">
+
+                                ₹${productPrice.toLocaleString(
+                                    "en-IN"
+                                )}
+
+                            </p>
+
+
+                            <!-- BUTTONS -->
+
+                            <div
+                                class="wishlist-buttons"
+                            >
+
+                                <a
+                                    href="product-details.html?id=${productId}"
+                                    class="view-btn"
+                                >
+                                    View Details
+                                </a>
+
+
+                                <button
+                                    type="button"
+                                    class="cart-btn"
+
+                                    onclick="
+                                        addToCart(
+                                            '${productId}'
+                                        )
+                                    "
+                                >
+                                    🛒 Add to Cart
+                                </button>
+
+                            </div>
+
+
+                            <!-- REMOVE -->
+
+                            <button
+                                type="button"
+                                class="remove-btn"
+
+                                onclick="
+                                    removeFromWishlist(
+                                        '${productId}'
+                                    )
+                                "
+                            >
+                                🗑 Remove
+                            </button>
+
+
+                        </div>
+
+                    </article>
+
+                `;
+
+            }).join("")}
+
+        </div>
+
+    `;
+
+}
+
+
+// ==================================================
+// ADD TO CART
+// POST /api/cart
+// ==================================================
+
+async function addToCart(productId) {
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/api/cart`,
+            {
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json",
+
+                    "Authorization":
+                        `Bearer ${token}`
+
+                },
+
+                body: JSON.stringify({
+
+                    productId: productId,
+
+                    quantity: 1
+
+                })
+
+            }
+        );
+
+
+        const data = await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Unable to add product to cart"
+            );
+
+        }
+
+
+        alert(
+            "✅ Product added to cart!"
+        );
+
+
+    } catch (error) {
+
+        alert(
+            "❌ " + error.message
+        );
+
+    }
+
+}
+
+
+// ==================================================
+// REMOVE FROM WISHLIST
+// DELETE /api/wishlist/:productId
+// ==================================================
+
+async function removeFromWishlist(productId) {
+
+
+    const confirmation = confirm(
+        "Are you sure you want to remove this product?"
+    );
+
+
+    if (!confirmation) {
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/api/wishlist/${productId}`,
+            {
+                method: "DELETE",
+
+                headers: {
+                    "Authorization":
+                        `Bearer ${token}`
+                }
+            }
+        );
+
+
+        const data = await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Unable to remove product"
+            );
+
+        }
+
+
+        alert(
+            "✅ Product removed from wishlist."
+        );
+
+
+        // Reload wishlist
+
+        loadWishlist();
+
+
+    } catch (error) {
+
+        alert(
+            "❌ " + error.message
+        );
+
+    }
+
+}
+
+
+// ==================================================
+// HTML SECURITY
+// ==================================================
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/'/g, "&#039;");
+
+}
+
+</script>
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Search - My E-Commerce</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+
+        <div class="logo">
+            <h2>My E-Commerce</h2>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="search.html">Search</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-actions">
+            <a href="login.html">Login</a>
+            <a href="wishlist.html">Wishlist</a>
+            <a href="cart.html">Cart</a>
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <section class="search-section">
+
+            <h1>Search Products</h1>
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search products..."
+                >
+
+                <button type="button" onclick="searchProducts()">
+                    Search
+                </button>
+
+            </div>
+
+            <div id="searchResults"></div>
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        function searchProducts() {
+
+            const searchValue =
+                document.getElementById("searchInput").value;
+
+            console.log("Searching for:", searchValue);
+
+        }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Product Details - ShopEase</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ==========================================
+           PRODUCT DETAILS
+        ========================================== */
+
+        .product-details {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 30px;
+            display: flex;
+            gap: 50px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ==========================================
+           PRODUCT IMAGE
+        ========================================== */
+
+        .product-details-image {
+            width: 50%;
+            min-height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f7f7f7;
+            border-radius: 18px;
+            padding: 30px;
+        }
+
+        .product-details-image img {
+            width: 100%;
+            max-width: 450px;
+            height: 450px;
+            object-fit: contain;
+            border-radius: 15px;
+        }
+
+        /* ==========================================
+           PRODUCT INFO
+        ========================================== */
+
+        .product-details-info {
+            width: 50%;
+        }
+
+        .product-details-info h1 {
+            font-size: 38px;
+            margin: 15px 0;
+            color: #222;
+        }
+
+        .product-category {
+            display: inline-block;
+            background: #eef2ff;
+            color: #4f46e5;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* ==========================================
+           RATING
+        ========================================== */
+
+        .rating {
+            margin: 15px 0;
+            font-size: 17px;
+        }
+
+        .rating-main {
+            color: #f59e0b;
+            font-weight: 700;
+        }
+
+        .rating span {
+            color: #666;
+        }
+
+        /* ==========================================
+           DESCRIPTION
+        ========================================== */
+
+        .short-description {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        /* ==========================================
+           PRICE
+        ========================================== */
+
+        .price-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #e53935;
+        }
+
+        .old-price {
+            font-size: 19px;
+            color: #888;
+            text-decoration: line-through;
+        }
+
+        .discount {
+            background: #e8f8ee;
+            color: #16803c;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        /* ==========================================
+           STOCK
+        ========================================== */
+
+        .stock {
+            margin: 15px 0;
+            font-size: 16px;
+        }
+
+        /* ==========================================
+           QUANTITY
+        ========================================== */
+
+        .quantity-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quantity-controls button {
+            width: 38px;
+            height: 38px;
+            border: 1px solid #ddd;
+            background: #f5f5f5;
+            border-radius: 7px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .quantity-controls button:hover {
+            background: #e5e5e5;
+        }
+
+        .quantity-box input {
+            width: 65px;
+            height: 38px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .quantity-box input::-webkit-outer-spin-button,
+        .quantity-box input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* ==========================================
+           PRODUCT ACTIONS
+        ========================================== */
+
+        .product-actions {
+            display: flex;
+            gap: 12px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .product-actions button {
+            border: none;
+            padding: 14px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .product-actions button:hover {
+            transform: translateY(-2px);
+        }
+
+        .product-actions button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #add-cart-btn {
+            background: #ff6b00;
+            color: white;
+        }
+
+        #add-cart-btn:hover {
+            background: #e85f00;
+        }
+
+        #buy-now-btn {
+            background: #111827;
+            color: white;
+        }
+
+        #buy-now-btn:hover {
+            background: #000;
+        }
+
+        #wishlist-btn {
+            background: #fff;
+            color: #e11d48;
+            border: 2px solid #e11d48;
+        }
+
+        #wishlist-btn:hover {
+            background: #e11d48;
+            color: white;
+        }
+
+        /* ==========================================
+           EXTRA INFORMATION
+        ========================================== */
+
+        .product-extra-info {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .product-extra-info h2 {
+            margin-bottom: 20px;
+        }
+
+        .product-extra-info h3 {
+            margin-top: 25px;
+        }
+
+        .product-extra-info p {
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .product-extra-info ul {
+            padding-left: 20px;
+            line-height: 2;
+        }
+
+        /* ==========================================
+           LOADING
+        ========================================== */
+
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            font-size: 20px;
+        }
+
+        /* ==========================================
+           ERROR
+        ========================================== */
+
+        .error-message {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .error-box {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .error-box h2 {
+            color: #e53935;
+        }
+
+        .error-box a {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            background: #111827;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+        }
+
+        /* ==========================================
+           MOBILE
+        ========================================== */
+
+        @media (max-width: 768px) {
+
+            .product-details {
+                flex-direction: column;
+                margin: 20px;
+                padding: 20px;
+                gap: 25px;
+            }
+
+            .product-details-image,
+            .product-details-info {
+                width: 100%;
+            }
+
+            .product-details-image {
+                min-height: 300px;
+            }
+
+            .product-details-image img {
+                height: 300px;
+            }
+
+            .product-details-info h1 {
+                font-size: 28px;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .product-actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ==========================================
+         NAVBAR
+    ========================================== -->
+
+    <header>
+        <div class="logo">
+            <a href="index.html">ShopEase</a>
+        </div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="search.html">Search</a>
+            <a href="wishlist.html">Wishlist</a>
+            <a href="cart.html">Cart</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+
+
+    <!-- ==========================================
+         LOADING
+    ========================================== -->
+
+    <div id="loading" class="loading">
+        Loading product details...
+    </div>
+
+
+    <!-- ==========================================
+         ERROR
+    ========================================== -->
+
+    <div id="error-message" class="error-message">
+    </div>
+
+
+    <!-- ==========================================
+         PRODUCT DETAILS
+    ========================================== -->
+
+    <main>
+
+        <section
+            id="product-details"
+            class="product-details"
+            style="display: none;"
+        >
+
+            <!-- PRODUCT IMAGE -->
+
+            <div class="product-details-image">
+
+                <img
+                    id="productImage"
+                    src=""
+                    alt="Product Image"
+                    onerror="handleImageError(this)"
+                >
+
+            </div>
+
+
+            <!-- PRODUCT INFORMATION -->
+
+            <div class="product-details-info">
+
+                <span
+                    id="product-category"
+                    class="product-category"
+                ></span>
+
+
+                <h1 id="product-name"></h1>
+
+
+                <!-- RATING -->
+
+                <div class="rating">
+
+                    <span class="rating-main">
+
+                        ⭐
+                        <span id="product-rating">0</span>
+
+                    </span>
+
+                    <span>
+
+                        (
+                        <span id="product-reviews">0</span>
+                        Reviews
+                        )
+
+                    </span>
+
+                </div>
+
+
+                <!-- SHORT DESCRIPTION -->
+
+                <p
+                    id="product-short-description"
+                    class="short-description"
+                ></p>
+
+
+                <!-- PRICE -->
+
+                <div class="price-box">
+
+                    <span
+                        id="product-price"
+                        class="price"
+                    ></span>
+
+                    <span
+                        id="product-old-price"
+                        class="old-price"
+                    ></span>
+
+                    <span
+                        id="product-discount"
+                        class="discount"
+                    ></span>
+
+                </div>
+
+
+                <!-- STOCK -->
+
+                <div class="stock">
+
+                    <strong>
+                        Stock:
+                    </strong>
+
+                    <span id="product-stock"></span>
+
+                </div>
+
+
+                <!-- QUANTITY -->
+
+                <div class="quantity-box">
+
+                    <label>
+                        <strong>Quantity:</strong>
+                    </label>
+
+                    <div class="quantity-controls">
+
+                        <button
+                            type="button"
+                            onclick="decreaseQuantity()"
+                        >
+                            −
+                        </button>
+
+                        <input
+                            type="number"
+                            id="quantity"
+                            value="1"
+                            min="1"
+                        >
+
+                        <button
+                            type="button"
+                            onclick="increaseQuantity()"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="product-actions">
+
+                    <button id="add-cart-btn">
+                        🛒 Add to Cart
+                    </button>
+
+                    <button id="buy-now-btn">
+                        ⚡ Buy Now
+                    </button>
+
+                    <button id="wishlist-btn">
+                        ❤️ Wishlist
+                    </button>
+
+                </div>
+
+
+                <!-- EXTRA INFORMATION -->
+
+                <div class="product-extra-info">
+
+                    <h2>
+                        Product Details
+                    </h2>
+
+                    <p>
+                        <strong>
+                            Brand:
+                        </strong>
+
+                        <span id="product-brand"></span>
+                    </p>
+
+                    <p>
+                        <strong>
+                            Color:
+                        </strong>
+
+                        <span id="product-color"></span>
+                    </p>
+
+                    <p>
+                        <strong>
+                            Warranty:
+                        </strong>
+
+                        <span id="product-warranty"></span>
+                    </p>
+
+
+                    <h3>
+                        Highlights
+                    </h3>
+
+                    <ul id="product-highlights"></ul>
+
+
+                    <h3>
+                        Description
+                    </h3>
+
+                    <p id="product-description"></p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script>
+
+        // ==========================================
+        // API URLS
+        // ==========================================
+
+        const API_URL =
+            "http://localhost:5000/api/products";
+
+        const CART_API_URL =
+            "http://localhost:5000/api/cart";
+
+        const WISHLIST_API_URL =
+            "http://localhost:5000/api/wishlist";
+
+
+        // ==========================================
+        // GET PRODUCT ID FROM URL
+        // ==========================================
+
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const productId =
+            urlParams.get("id");
+
+
+        // ==========================================
+        // HTML ELEMENTS
+        // ==========================================
+
+        const loading =
+            document.getElementById("loading");
+
+        const errorMessage =
+            document.getElementById("error-message");
+
+        const productDetails =
+            document.getElementById("product-details");
+
+        const quantityInput =
+            document.getElementById("quantity");
+
+
+        // Current product
+
+        let currentProduct = null;
+
+
+        // ==========================================
+        // CHECK PRODUCT ID
+        // ==========================================
+
+        if (!productId) {
+
+            showError(
+                "Product ID is missing from the URL."
+            );
+
+        } else {
+
+            loadProduct();
+
+        }
+
+
+        // ==========================================
+        // LOAD PRODUCT
+        // ==========================================
+
+        async function loadProduct() {
+
+            try {
+
+                loading.style.display = "block";
+
+                const response =
+                    await fetch(
+                        `${API_URL}/${productId}`
+                    );
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "Product not found"
+                    );
+
+                }
+
+
+                currentProduct =
+                    data.product;
+
+
+                displayProduct(
+                    currentProduct
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Product Error:",
+                    error
+                );
+
+                showError(
+                    error.message
+                );
+
+            }
+
+        }
+
+
+        // ==========================================
+        // DISPLAY PRODUCT
+        // ==========================================
+
+        function displayProduct(product) {
+
+            loading.style.display = "none";
+
+            productDetails.style.display = "flex";
+
+            document.title =
+                `${product.name} - ShopEase`;
+
+
+            // ======================================
+            // IMAGE
+            // ======================================
+
+            const productImage =
+                document.getElementById(
+                    "productImage"
+                );
+
+
+            let imagePath =
+                product.image || "";
+
+
+            if (
+                imagePath.startsWith("http://") ||
+                imagePath.startsWith("https://")
+            ) {
+
+                productImage.src =
+                    imagePath;
+
+            } else {
+
+                productImage.src =
+                    imagePath.replace(
+                        /^\/+/,
+                        ""
+                    );
+
+            }
+
+
+            productImage.alt =
+                product.name;
+
+
+            // ======================================
+            // NAME
+            // ======================================
+
+            document.getElementById(
+                "product-name"
+            ).innerText =
+                product.name;
+
+
+            // ======================================
+            // CATEGORY
+            // ======================================
+
+            document.getElementById(
+                "product-category"
+            ).innerText =
+                product.category ||
+                "Product";
+
+
+            // ======================================
+            // RATING
+            // ======================================
+
+            document.getElementById(
+                "product-rating"
+            ).innerText =
+                Number(product.rating || 0).toFixed(1);
+
+
+            // ======================================
+            // REVIEWS
+            // ======================================
+
+            document.getElementById(
+                "product-reviews"
+            ).innerText =
+                product.reviews || 0;
+
+
+            // ======================================
+            // SHORT DESCRIPTION
+            // ======================================
+
+            document.getElementById(
+                "product-short-description"
+            ).innerText =
+                product.shortDescription || "";
+
+
+            // ======================================
+            // PRICE
+            // ======================================
+
+            document.getElementById(
+                "product-price"
+            ).innerText =
+                formatPrice(product.price);
+
+
+            // ======================================
+            // OLD PRICE
+            // ======================================
+
+            const oldPrice =
+                document.getElementById(
+                    "product-old-price"
+                );
+
+
+            if (product.oldPrice) {
+
+                oldPrice.innerText =
+                    formatPrice(
+                        product.oldPrice
+                    );
+
+                oldPrice.style.display =
+                    "inline";
+
+            } else {
+
+                oldPrice.style.display =
+                    "none";
+
+            }
+
+
+            // ======================================
+            // DISCOUNT
+            // ======================================
+
+            const discount =
+                document.getElementById(
+                    "product-discount"
+                );
+
+
+            if (product.discount > 0) {
+
+                discount.innerText =
+                    `${product.discount}% OFF`;
+
+                discount.style.display =
+                    "inline-block";
+
+            } else {
+
+                discount.style.display =
+                    "none";
+
+            }
+
+
+            // ======================================
+            // STOCK
+            // ======================================
+
+            const stockElement =
+                document.getElementById(
+                    "product-stock"
+                );
+
+
+            if (product.stock > 0) {
+
+                stockElement.innerText =
+                    `${product.stock} available`;
+
+                stockElement.style.color =
+                    "green";
+
+                quantityInput.max =
+                    product.stock;
+
+                quantityInput.disabled =
+                    false;
+
+                document.getElementById(
+                    "add-cart-btn"
+                ).disabled = false;
+
+                document.getElementById(
+                    "buy-now-btn"
+                ).disabled = false;
+
+            } else {
+
+                stockElement.innerText =
+                    "Out of Stock";
+
+                stockElement.style.color =
+                    "red";
+
+                quantityInput.disabled =
+                    true;
+
+                document.getElementById(
+                    "add-cart-btn"
+                ).disabled = true;
+
+                document.getElementById(
+                    "buy-now-btn"
+                ).disabled = true;
+
+            }
+
+
+            // ======================================
+            // BRAND
+            // ======================================
+
+            document.getElementById(
+                "product-brand"
+            ).innerText =
+                product.brand || "N/A";
+
+
+            // ======================================
+            // COLOR
+            // ======================================
+
+            document.getElementById(
+                "product-color"
+            ).innerText =
+                product.color || "N/A";
+
+
+            // ======================================
+            // WARRANTY
+            // ======================================
+
+            document.getElementById(
+                "product-warranty"
+            ).innerText =
+                product.warranty || "N/A";
+
+
+            // ======================================
+            // DESCRIPTION
+            // ======================================
+
+            document.getElementById(
+                "product-description"
+            ).innerText =
+                product.description ||
+                "No description available.";
+
+
+            // ======================================
+            // HIGHLIGHTS
+            // ======================================
+
+            const highlightsList =
+                document.getElementById(
+                    "product-highlights"
+                );
+
+
+            highlightsList.innerHTML = "";
+
+
+            if (
+                product.highlights &&
+                product.highlights.length > 0
+            ) {
+
+                product.highlights.forEach(
+                    function(highlight) {
+
+                        const li =
+                            document.createElement(
+                                "li"
+                            );
+
+                        li.innerText =
+                            highlight;
+
+                        highlightsList.appendChild(
+                            li
+                        );
+
+                    }
+                );
+
+            } else {
+
+                highlightsList.innerHTML =
+                    "<li>No highlights available</li>";
+
+            }
+
+
+            // ======================================
+            // BUTTON EVENTS
+            // ======================================
+
+            document.getElementById(
+                "add-cart-btn"
+            ).onclick = function() {
+
+                addToCart(
+                    currentProduct
+                );
+
+            };
+
+
+            document.getElementById(
+                "buy-now-btn"
+            ).onclick = function() {
+
+                buyNow(
+                    currentProduct
+                );
+
+            };
+
+
+            document.getElementById(
+                "wishlist-btn"
+            ).onclick = function() {
+
+                addToWishlist(
+                    currentProduct
+                );
+
+            };
+
+        }
+
+
+        // ==========================================
+        // FORMAT PRICE
+        // ==========================================
+
+        function formatPrice(price) {
+
+            return "₹" +
+                Number(price || 0).toLocaleString(
+                    "en-IN"
+                );
+
+        }
+
+
+        // ==========================================
+        // IMAGE FALLBACK
+        // ==========================================
+
+        function handleImageError(image) {
+
+            image.onerror = null;
+
+            image.src =
+                "image/laptop.jpg";
+
+        }
+
+
+        // ==========================================
+        // INCREASE QUANTITY
+        // ==========================================
+
+        function increaseQuantity() {
+
+            if (!currentProduct) {
+                return;
+            }
+
+
+            let quantity =
+                parseInt(
+                    quantityInput.value
+                ) || 1;
+
+
+            if (
+                quantity <
+                currentProduct.stock
+            ) {
+
+                quantity++;
+
+            }
+
+
+            quantityInput.value =
+                quantity;
+
+        }
+
+
+        // ==========================================
+        // DECREASE QUANTITY
+        // ==========================================
+
+        function decreaseQuantity() {
+
+            let quantity =
+                parseInt(
+                    quantityInput.value
+                ) || 1;
+
+
+            if (quantity > 1) {
+
+                quantity--;
+
+            }
+
+
+            quantityInput.value =
+                quantity;
+
+        }
+
+
+        // ==========================================
+        // VALIDATE QUANTITY
+        // ==========================================
+
+        function getValidQuantity() {
+
+            if (!currentProduct) {
+
+                return null;
+
+            }
+
+
+            let quantity =
+                parseInt(
+                    quantityInput.value
+                );
+
+
+            if (
+                isNaN(quantity) ||
+                quantity < 1
+            ) {
+
+                alert(
+                    "Please enter a valid quantity."
+                );
+
+                quantityInput.value =
+                    1;
+
+                return null;
+
+            }
+
+
+            if (
+                quantity >
+                currentProduct.stock
+            ) {
+
+                alert(
+                    `Only ${currentProduct.stock} items are available.`
+                );
+
+                quantityInput.value =
+                    currentProduct.stock;
+
+                return null;
+
+            }
+
+
+            return quantity;
+
+        }
+
+
+        // ==========================================
+        // ADD TO CART
+        // ==========================================
+
+        async function addToCart(product) {
+
+            const token =
+                localStorage.getItem(
+                    "token"
+                );
+
+
+            if (!token) {
+
+                alert(
+                    "Please login first to add products to cart."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            const quantity =
+                getValidQuantity();
+
+
+            if (!quantity) {
+                return;
+            }
+
+
+            const button =
+                document.getElementById(
+                    "add-cart-btn"
+                );
+
+
+            button.disabled = true;
+
+            button.innerText =
+                "Adding...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        CART_API_URL,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
+
+                                "Authorization":
+                                    `Bearer ${token}`
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    productId:
+                                        product._id,
+
+                                    quantity:
+                                        quantity
+                                })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    if (
+                        response.status === 401
+                    ) {
+
+                        localStorage.removeItem(
+                            "token"
+                        );
+
+                        localStorage.removeItem(
+                            "user"
+                        );
+
+                        alert(
+                            "Your login session has expired. Please login again."
+                        );
+
+                        window.location.href =
+                            "login.html";
+
+                        return;
+
+                    }
+
+
+                    throw new Error(
+                        data.message ||
+                        "Unable to add product to cart."
+                    );
+
+                }
+
+
+                alert(
+                    `${product.name} added to cart successfully!`
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Add To Cart Error:",
+                    error
+                );
+
+                alert(
+                    error.message ||
+                    "Server error. Please try again."
+                );
+
+            } finally {
+
+                button.disabled =
+                    false;
+
+                button.innerText =
+                    "🛒 Add to Cart";
+
+            }
+
+        }
+
+
+        // ==========================================
+        // BUY NOW
+        // ==========================================
+
+        async function buyNow(product) {
+
+            const token =
+                localStorage.getItem(
+                    "token"
+                );
+
+
+            if (!token) {
+
+                alert(
+                    "Please login first."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            const quantity =
+                getValidQuantity();
+
+
+            if (!quantity) {
+                return;
+            }
+
+
+            const button =
+                document.getElementById(
+                    "buy-now-btn"
+                );
+
+
+            button.disabled = true;
+
+            button.innerText =
+                "Processing...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        CART_API_URL,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
+
+                                "Authorization":
+                                    `Bearer ${token}`
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    productId:
+                                        product._id,
+
+                                    quantity:
+                                        quantity
+                                })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    if (
+                        response.status === 401
+                    ) {
+
+                        localStorage.removeItem(
+                            "token"
+                        );
+
+                        localStorage.removeItem(
+                            "user"
+                        );
+
+                        alert(
+                            "Please login again."
+                        );
+
+                        window.location.href =
+                            "login.html";
+
+                        return;
+
+                    }
+
+
+                    throw new Error(
+                        data.message ||
+                        "Unable to proceed."
+                    );
+
+                }
+
+
+                window.location.href =
+                    "cart.html";
+
+            } catch (error) {
+
+                console.error(
+                    "Buy Now Error:",
+                    error
+                );
+
+                alert(
+                    error.message ||
+                    "Server error. Please try again."
+                );
+
+            } finally {
+
+                button.disabled =
+                    false;
+
+                button.innerText =
+                    "⚡ Buy Now";
+
+            }
+
+        }
+
+
+        // ==========================================
+        // ADD TO WISHLIST
+        // ==========================================
+
+        async function addToWishlist(product) {
+
+            const token =
+                localStorage.getItem(
+                    "token"
+                );
+
+
+            if (!token) {
+
+                alert(
+                    "Please login first to add products to wishlist."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            const button =
+                document.getElementById(
+                    "wishlist-btn"
+                );
+
+
+            button.disabled = true;
+
+            button.innerText =
+                "Adding...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        WISHLIST_API_URL,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
+
+                                "Authorization":
+                                    `Bearer ${token}`
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    productId:
+                                        product._id
+                                })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    if (
+                        response.status === 401
+                    ) {
+
+                        localStorage.removeItem(
+                            "token"
+                        );
+
+                        localStorage.removeItem(
+                            "user"
+                        );
+
+                        alert(
+                            "Please login again."
+                        );
+
+                        window.location.href =
+                            "login.html";
+
+                        return;
+
+                    }
+
+
+                    throw new Error(
+                        data.message ||
+                        "Unable to add product to wishlist."
+                    );
+
+                }
+
+
+                button.innerText =
+                    "❤️ Added to Wishlist";
+
+                button.style.background =
+                    "#e11d48";
+
+                button.style.color =
+                    "white";
+
+
+                alert(
+                    `${product.name} added to wishlist!`
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Wishlist Error:",
+                    error
+                );
+
+                alert(
+                    error.message ||
+                    "Server error. Please try again."
+                );
+
+            } finally {
+
+                button.disabled =
+                    false;
+
+            }
+
+        }
+
+
+        // ==========================================
+        // SHOW ERROR
+        // ==========================================
+
+        function showError(message) {
+
+            loading.style.display =
+                "none";
+
+            productDetails.style.display =
+                "none";
+
+
+            errorMessage.innerHTML = `
+
+                <div class="error-box">
+
+                    <h2>
+                        Product Not Found
+                    </h2>
+
+                    <p>
+                        ${message}
+                    </p>
+
+                    <a href="products.html">
+                        ← Back to Products
+                    </a>
+
+                </div>
+
+            `;
+
+        }
+
+    </script>
+
+</body>
+
+</html>

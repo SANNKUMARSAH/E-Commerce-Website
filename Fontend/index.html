@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShopEase - Online Shopping</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ================= FEATURED PRODUCTS ================= */
+
+        .featured-products {
+            padding: 60px 5%;
+            background: #f8f9fa;
+        }
+
+        .featured-products h2 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 35px;
+            color: #222;
+        }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: 0.3s ease;
+            padding-bottom: 20px;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-card-image {
+            width: 100%;
+            height: 250px;
+            background: #f5f6f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        .product-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+            transition: 0.3s ease;
+        }
+
+        .product-card:hover .product-card-image img {
+            transform: scale(1.05);
+        }
+
+        .product-card-content {
+            padding: 20px;
+        }
+
+        .product-card h3 {
+            font-size: 19px;
+            margin: 0 0 10px;
+            color: #222;
+        }
+
+        .product-card .price {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e53935;
+            margin-bottom: 15px;
+        }
+
+        .product-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .product-buttons a {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            padding: 11px 8px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .view-details {
+            background: #222;
+            color: white;
+        }
+
+        .view-details:hover {
+            background: #000;
+        }
+
+        .add-cart {
+            background: #ff6b00;
+            color: white;
+        }
+
+        .add-cart:hover {
+            background: #e85f00;
+        }
+
+        /* ================= HERO SLIDER FALLBACK ================= */
+
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .slides {
+            position: relative;
+            width: 100%;
+        }
+
+        .slide {
+            display: none;
+            position: relative;
+            width: 100%;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 520px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 8%;
+            transform: translateY(-50%);
+            max-width: 550px;
+            color: white;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            margin: 10px 0;
+        }
+
+        .hero-content h2 {
+            font-size: 32px;
+            margin: 10px 0;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 13px 25px;
+            background: #ff6b00;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.55);
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .slider-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .slider-btn.prev {
+            left: 20px;
+        }
+
+        .slider-btn.next {
+            right: 20px;
+        }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 5;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1100px) {
+            .product-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .hero-content h1 {
+                font-size: 40px;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .product-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .slide img {
+                height: 450px;
+            }
+
+            .hero-content {
+                left: 6%;
+                right: 6%;
+            }
+
+            .hero-content h1 {
+                font-size: 32px;
+            }
+
+            .hero-content h2 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .product-container {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-products {
+                padding: 40px 20px;
+            }
+
+            .slide img {
+                height: 400px;
+            }
+
+            .hero-content h1 {
+                font-size: 28px;
+            }
+
+            .hero-content h2 {
+                font-size: 21px;
+            }
+
+            .hero-content p {
+                font-size: 15px;
+            }
+
+            .slider-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <div class="logo">
+            <a href="index.html">ShopEase</a>
+        </div>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="search.html">Search</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="cart.html">Cart</a>
+    <a href="orders.html">My Orders</a>
+    <a href="login.html">Login</a>
+</nav>
+
+        <div class="header-actions">
+            <a href="search.html">Search</a>
+            <a href="login.html">Login</a>
+            <a href="signup.html">Sign Up</a>
+            <a href="wishlist.html">Wishlist</a>
+            <a href="cart.html">Cart</a>
+            <a href="orders.html">My Orders</a>       
+        </div>
+
+    </header>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main>
+
+        <!-- ================= HERO SLIDER ================= -->
+
+        <section class="hero-slider">
+
+            <div class="slides">
+
+                <!-- Slide 1 -->
+                <div class="slide active">
+
+                    <img src="images/hero1.jpg" alt="Big Shopping Sale"
+                        onerror="this.onerror=null;this.src='image/laptop.jpg';">
+
+                    <div class="hero-content">
+
+                        <p>🔥 Mega Sale</p>
+
+                        <h1>Big Shopping Sale</h1>
+
+                        <h2>Up to 70% OFF</h2>
+
+                        <p>Best products at amazing prices.</p>
+
+                        <a href="products.html" class="hero-btn">
+                            Shop Now
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Slide 2 -->
+                <div class="slide">
+
+                    <img src="images/hero2.jpg" alt="Electronics Sale"
+                        onerror="this.onerror=null;this.src='image/smartphone.jpg';">
+
+                    <div class="hero-content">
+
+                        <p>⚡ Electronics Deals</p>
+
+                        <h1>Upgrade Your Technology</h1>
+
+                        <h2>Up to 50% OFF</h2>
+
+                        <p>Laptops, smartphones and more.</p>
+
+                        <a href="products.html" class="hero-btn">
+                            Explore Now
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Slide 3 -->
+                <div class="slide">
+
+                    <img src="images/hero3.jpg" alt="Fashion Sale"
+                        onerror="this.onerror=null;this.src='image/shoes.jpg';">
+
+                    <div class="hero-content">
+
+                        <p>👕 Fashion Collection</p>
+
+                        <h1>New Fashion Arrivals</h1>
+
+                        <h2>Starting ₹499</h2>
+
+                        <p>Discover the latest fashion trends.</p>
+
+                        <a href="products.html" class="hero-btn">
+                            Shop Fashion
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Slide 4 -->
+                <div class="slide">
+
+                    <img src="images/hero4.jpg" alt="Home Products"
+                        onerror="this.onerror=null;this.src='image/backpack.jpg';">
+
+                    <div class="hero-content">
+
+                        <p>🏠 Home & Living</p>
+
+                        <h1>Make Your Home Better</h1>
+
+                        <h2>Up to 60% OFF</h2>
+
+                        <p>Everything you need for your home.</p>
+
+                        <a href="products.html" class="hero-btn">
+                            Shop Now
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Previous -->
+            <button class="slider-btn prev" onclick="changeSlide(-1)">
+                ❮
+            </button>
+
+
+            <!-- Next -->
+            <button class="slider-btn next" onclick="changeSlide(1)">
+                ❯
+            </button>
+
+
+            <!-- Dots -->
+            <div class="slider-dots">
+
+                <span class="dot active" onclick="currentSlide(1)"></span>
+
+                <span class="dot" onclick="currentSlide(2)"></span>
+
+                <span class="dot" onclick="currentSlide(3)"></span>
+
+                <span class="dot" onclick="currentSlide(4)"></span>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= CATEGORIES ================= -->
+
+        <section class="categories">
+
+            <h2>Shop by Category</h2>
+
+            <div class="category-container">
+
+                <article class="category-card">
+
+                    <h3>Electronics</h3>
+
+                    <p>Latest electronic products</p>
+
+                    <a href="products.html">
+                        Explore
+                    </a>
+
+                </article>
+
+
+                <article class="category-card">
+
+                    <h3>Fashion</h3>
+
+                    <p>Trending fashion products</p>
+
+                    <a href="products.html">
+                        Explore
+                    </a>
+
+                </article>
+
+
+                <article class="category-card">
+
+                    <h3>Books</h3>
+
+                    <p>Books for every reader</p>
+
+                    <a href="products.html">
+                        Explore
+                    </a>
+
+                </article>
+
+
+                <article class="category-card">
+
+                    <h3>Accessories</h3>
+
+                    <p>Useful everyday accessories</p>
+
+                    <a href="products.html">
+                        Explore
+                    </a>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= FEATURED PRODUCTS ================= -->
+
+        <section class="featured-products">
+
+            <h2>Featured Products</h2>
+
+            <div class="product-container">
+
+
+                <!-- HEADPHONES -->
+
+                <div class="product-card">
+
+                    <div class="product-card-image">
+
+                        <img src="image/headphones.jpg"
+                            alt="Wireless Headphones"
+                            onerror="this.onerror=null;this.src='image/placeholder.jpg';">
+
+                    </div>
+
+                    <div class="product-card-content">
+
+                        <h3>Wireless Headphones</h3>
+
+                        <p class="price">₹2,499</p>
+
+                        <div class="product-buttons">
+
+                            <a href="product-details.html"
+                                class="view-details">
+                                View Details
+                            </a>
+
+                            <a href="products.html"
+                                class="add-cart">
+                                Add to Cart
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SMART WATCH -->
+
+                <div class="product-card">
+
+                    <div class="product-card-image">
+
+                        <img src="image/smartwatch.jpg"
+                            alt="Smart Watch"
+                            onerror="this.onerror=null;this.src='image/placeholder.jpg';">
+
+                    </div>
+
+                    <div class="product-card-content">
+
+                        <h3>Smart Watch</h3>
+
+                        <p class="price">₹1,999</p>
+
+                        <div class="product-buttons">
+
+                            <a href="product-details.html"
+                                class="view-details">
+                                View Details
+                            </a>
+
+                            <a href="products.html"
+                                class="add-cart">
+                                Add to Cart
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RUNNING SHOES -->
+
+                <div class="product-card">
+
+                    <div class="product-card-image">
+
+                        <img src="image/shoes.jpg"
+                            alt="Running Shoes"
+                            onerror="this.onerror=null;this.src='image/placeholder.jpg';">
+
+                    </div>
+
+                    <div class="product-card-content">
+
+                        <h3>Running Shoes</h3>
+
+                        <p class="price">₹1,799</p>
+
+                        <div class="product-buttons">
+
+                            <a href="product-details.html"
+                                class="view-details">
+                                View Details
+                            </a>
+
+                            <a href="products.html"
+                                class="add-cart">
+                                Add to Cart
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LAPTOP -->
+
+                <div class="product-card">
+
+                    <div class="product-card-image">
+
+                        <img src="image/laptop.jpg"
+                            alt="Laptop"
+                            onerror="this.onerror=null;this.src='image/placeholder.jpg';">
+
+                    </div>
+
+                    <div class="product-card-content">
+
+                        <h3>Laptop</h3>
+
+                        <p class="price">₹54,999</p>
+
+                        <div class="product-buttons">
+
+                            <a href="product-details.html"
+                                class="view-details">
+                                View Details
+                            </a>
+
+                            <a href="products.html"
+                                class="add-cart">
+                                Add to Cart
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SPECIAL OFFERS ================= -->
+
+        <section class="offer">
+
+            <div class="offer-content">
+
+                <p>Limited Time Offer</p>
+
+                <h2>Get Up To 50% Off</h2>
+
+                <p>
+                    Don't miss our special deals.
+                    Grab your favorite products today.
+                </p>
+
+                <a href="products.html">
+                    View Offers
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= WHY CHOOSE US ================= -->
+
+        <section class="why-us">
+
+            <h2>Why Choose ShopEase?</h2>
+
+            <div class="features">
+
+                <article class="feature">
+
+                    <h3>🚚 Fast Delivery</h3>
+
+                    <p>
+                        Get your products delivered quickly.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <h3>🔒 Secure Payment</h3>
+
+                    <p>
+                        Your payments are safe and secure.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <h3>↩️ Easy Returns</h3>
+
+                    <p>
+                        Easy and hassle-free product returns.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <h3>💬 24/7 Support</h3>
+
+                    <p>
+                        Our support team is always available.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="footer-content">
+
+            <!-- About -->
+
+            <div class="footer-section">
+
+                <h3>ShopEase</h3>
+
+                <p>
+                    Your one-stop destination
+                    for online shopping.
+                </p>
+
+            </div>
+
+
+            <!-- Quick Links -->
+
+            <div class="footer-section">
+
+                <h3>Quick Links</h3>
+
+                <ul>
+
+                    <li>
+                        <a href="index.html">
+                            Home
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="products.html">
+                            Products
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="categories.html">
+                            Categories
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="about.html">
+                            About
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="contact.html">
+                            Contact
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- Customer Service -->
+
+            <div class="footer-section">
+
+                <h3>Customer Service</h3>
+
+                <ul>
+
+                    <li>
+                        <a href="#">
+                            FAQ
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            Shipping
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            Returns
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            Privacy Policy
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- Social -->
+
+            <div class="footer-section">
+
+                <h3>Follow Us</h3>
+
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">YouTube</a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Copyright -->
+
+        <div class="copyright">
+
+            <p>
+                © 2026 ShopEase. All Rights Reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
