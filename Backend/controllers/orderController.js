@@ -104,34 +104,61 @@ const createOrder = async (req, res) => {
         const totalAmount = subtotal + deliveryFee;
 
         // ==========================================
+        // RESERVE STOCK (atomic, prevents overselling)
+        // ==========================================
+
+        const reserved = [];
+
+        for (const item of cart.items) {
+            const result = await Product.updateOne(
+                { _id: item.product._id, stock: { $gte: item.quantity } },
+                { $inc: { stock: -item.quantity } }
+            );
+
+            if (result.modifiedCount !== 1) {
+                // Someone else bought it first: undo what we reserved
+                for (const r of reserved) {
+                    await Product.updateOne(
+                        { _id: r.id },
+                        { $inc: { stock: r.quantity } }
+                    );
+                }
+
+                return res.status(400).json({
+                    success: false,
+                    message: `${item.product.name} just went out of stock`
+                });
+            }
+
+            reserved.push({ id: item.product._id, quantity: item.quantity });
+        }
+
+        // ==========================================
         // CREATE ORDER
         // ==========================================
 
-        const order = await Order.create({
-            user: req.user.userId,
-            orderItems,
-            shippingAddress,
-            subtotal,
-            deliveryFee,
-            totalAmount,
-            paymentMethod,
-            paymentStatus: "Pending",
-            orderStatus: "Pending"
-        });
+        let order;
 
-        // ==========================================
-        // REDUCE STOCK
-        // ==========================================
-
-        for (const item of cart.items) {
-            await Product.findByIdAndUpdate(
-                item.product._id,
-                {
-                    $inc: {
-                        stock: -item.quantity
-                    }
-                }
-            );
+        try {
+            order = await Order.create({
+                user: req.user.userId,
+                orderItems,
+                shippingAddress,
+                subtotal,
+                deliveryFee,
+                totalAmount,
+                paymentMethod,
+                paymentStatus: "Pending",
+                orderStatus: "Pending"
+            });
+        } catch (createError) {
+            for (const r of reserved) {
+                await Product.updateOne(
+                    { _id: r.id },
+                    { $inc: { stock: r.quantity } }
+                );
+            }
+            throw createError;
         }
 
         // ==========================================
@@ -153,7 +180,7 @@ const createOrder = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -183,7 +210,7 @@ const getMyOrders = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -218,7 +245,7 @@ const getOrderById = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -288,7 +315,7 @@ const cancelOrder = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };

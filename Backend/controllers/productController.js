@@ -42,7 +42,7 @@ const createProduct = async (req, res) => {
             name,
             category,
             price,
-            oldPrice,
+            oldPrice: oldPrice !== undefined && oldPrice !== "" ? oldPrice : price,
             discount,
             image,
             shortDescription,
@@ -68,7 +68,7 @@ const createProduct = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -97,7 +97,7 @@ const getProducts = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -128,7 +128,7 @@ const getProductById = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Invalid product ID",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -167,7 +167,7 @@ const updateProduct = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Invalid product ID or data",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -178,8 +178,11 @@ const updateProduct = async (req, res) => {
 // ==========================================
 const deleteProduct = async (req, res) => {
     try {
-        const product = await Product.findByIdAndDelete(
-            req.params.id
+        // Soft delete: keeps old orders working
+        const product = await Product.findByIdAndUpdate(
+            req.params.id,
+            { isActive: false },
+            { new: true }
         );
 
         if (!product) {
@@ -197,10 +200,9 @@ const deleteProduct = async (req, res) => {
     } catch (error) {
         console.error("Delete Product Error:", error);
 
-        res.status(500).json({
+        res.status(400).json({
             success: false,
-            message: "Invalid product ID",
-            error: error.message
+            message: "Invalid product ID"
         });
     }
 };

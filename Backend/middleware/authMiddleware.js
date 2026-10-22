@@ -25,8 +25,6 @@ const protect = (req, res, next) => {
                 process.env.JWT_SECRET
             );
 
-        console.log("JWT DECODED:", decoded);
-
         // Support different ID field names
         req.user = {
             ...decoded,
@@ -61,5 +59,24 @@ const protect = (req, res, next) => {
 
     }
 };
+// Admin role check
+const adminOnly = (req, res, next) => {
+    if (!req.user || req.user.role !== "admin") {
+        return res.status(403).json({
+            success: false,
+            message: "Access denied. Admin only."
+        });
+    }
+
+    next();
+};
 
 module.exports = protect;
+module.exports.adminOnly = adminOnly;
+
+// ==========================================
+// EXPORT
+// ==========================================
+module.exports = protect;
+module.exports.adminOnly = adminOnly;
+

@@ -7,13 +7,22 @@ const jwt = require("jsonwebtoken");
 // ==========================================
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, password, phone } = req.body;
+        const email = String(req.body.email || "").toLowerCase().trim();
 
         // Check required fields
         if (!name || !email || !password) {
             return res.status(400).json({
                 success: false,
                 message: "Name, email and password are required"
+            });
+        }
+
+        // Basic email format check
+        if (!/^\S+@\S+\.\S+$/.test(String(email))) {
+            return res.status(400).json({
+                success: false,
+                message: "Please enter a valid email address"
             });
         }
 
@@ -42,6 +51,7 @@ const registerUser = async (req, res) => {
         const user = await User.create({
             name,
             email,
+            phone: phone || "",
             password: hashedPassword
         });
 
@@ -63,7 +73,7 @@ const registerUser = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -74,7 +84,8 @@ const registerUser = async (req, res) => {
 // ==========================================
 const loginUser = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { password } = req.body;
+        const email = String(req.body.email || "").toLowerCase().trim();
 
         // Check required fields
         if (!email || !password) {
@@ -138,7 +149,7 @@ const loginUser = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -170,7 +181,7 @@ const getMe = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };

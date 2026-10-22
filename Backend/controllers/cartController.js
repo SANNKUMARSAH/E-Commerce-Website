@@ -105,7 +105,7 @@ const addToCart = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -146,7 +146,7 @@ const getCart = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -241,7 +241,7 @@ const updateCartQuantity = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -295,7 +295,7 @@ const removeFromCart = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -341,7 +341,7 @@ const clearCart = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };

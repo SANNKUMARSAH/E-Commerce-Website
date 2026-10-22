@@ -44,7 +44,7 @@ const getWishlist = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -128,7 +128,7 @@ const addToWishlist = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };
@@ -184,7 +184,7 @@ const removeFromWishlist = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Server error",
-            error: error.message
+            error: process.env.NODE_ENV === "production" ? undefined : error.message
         });
     }
 };

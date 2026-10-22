@@ -9,6 +9,7 @@ const {
 } = require("../controllers/productController");
 
 const protect = require("../middleware/authMiddleware");
+const admin = require("../middleware/adminMiddleware");
 
 const router = express.Router();
 
@@ -29,25 +30,25 @@ router.get("/:id", getProductById);
 // ==========================================
 // CREATE PRODUCT
 // POST /api/products
-// Login required
+// Admin only
 // ==========================================
-router.post("/", protect, createProduct);
+router.post("/", protect, admin, createProduct);
 
 
 // ==========================================
 // UPDATE PRODUCT
 // PUT /api/products/:id
-// Login required
+// Admin only
 // ==========================================
-router.put("/:id", protect, updateProduct);
+router.put("/:id", protect, admin, updateProduct);
 
 
 // ==========================================
 // DELETE PRODUCT
 // DELETE /api/products/:id
-// Login required
+// Admin only
 // ==========================================
-router.delete("/:id", protect, deleteProduct);
+router.delete("/:id", protect, admin, deleteProduct);
 
 
 // ==========================================
